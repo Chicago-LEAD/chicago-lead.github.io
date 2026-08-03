@@ -1,0 +1,334 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>News — Chicago LEAD</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Big+Shoulders+Display:wght@600;700;900&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --ice: #F7FAFC;
+            --midnight: #0B1120;
+            --slate: #1E293B;
+            --flag-blue: #41B6E4;
+            --chicago-red: #D8242D;
+            --cloud: #E2E8F0;
+            --muted: #64748B;
+            --research: #5A5AD6;
+
+            --page-max: 1300px;
+            --side-pad-desktop: clamp(36px, 7vw, 90px);
+            --side-pad-mobile: 28px;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        html { scroll-behavior: smooth; overflow-x: hidden; }
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--ice);
+            color: var(--slate);
+            line-height: 1.6;
+            -webkit-font-smoothing: antialiased;
+            overflow-x: hidden;
+        }
+        .page-width { max-width: var(--page-max); margin-inline: auto; padding-inline: var(--side-pad-desktop); }
+
+        .section-eyebrow {
+            display: inline-flex; align-items: center; gap: 10px;
+            font-family: 'Inter', sans-serif;
+            font-size: 0.8rem; font-weight: 600; letter-spacing: 0.14em;
+            text-transform: uppercase; color: var(--muted);
+        }
+        .live-dot { width: 9px; height: 9px; border-radius: 50%; background: #22C55E; box-shadow: 0 0 0 0 rgba(34,197,94,0.5); animation: pulse 2s infinite; }
+        @keyframes pulse { 0% { box-shadow: 0 0 0 0 rgba(34,197,94,0.5); } 70% { box-shadow: 0 0 0 8px rgba(34,197,94,0); } 100% { box-shadow: 0 0 0 0 rgba(34,197,94,0); } }
+        @media (prefers-reduced-motion: reduce) { .live-dot { animation: none; } }
+
+        .topbar { height: 4px; background: linear-gradient(90deg, var(--flag-blue) 0%, var(--flag-blue) 55%, var(--chicago-red) 100%); }
+
+        /* ── HEADER / NAV ── */
+        header {
+            position: sticky; top: 0; z-index: 100;
+            background: rgba(247, 250, 252, 0.9);
+            backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
+            border-bottom: 1px solid var(--cloud);
+        }
+        header .page-width { display: flex; justify-content: space-between; align-items: center; min-height: 72px; }
+        .logo {
+            font-family: 'Big Shoulders Display', sans-serif;
+            font-weight: 900; font-size: 1.5rem;
+            letter-spacing: 0.02em; color: var(--midnight);
+            text-decoration: none; display: flex; align-items: center; gap: 12px;
+        }
+        .logo img { height: 40px; width: auto; display: block; }
+        .nav-links { display: flex; list-style: none; gap: 2.5rem; align-items: center; }
+        .nav-links a {
+            font-family: 'Inter', sans-serif;
+            text-decoration: none; color: var(--midnight);
+            font-size: 0.85rem; font-weight: 600; letter-spacing: 0.12em;
+            text-transform: uppercase; position: relative; padding-bottom: 6px; transition: color 0.2s ease;
+        }
+        .nav-links a:hover, .nav-links a.active { color: var(--chicago-red); }
+        .nav-links a::after { content: ''; position: absolute; left: 0; bottom: 2px; width: 100%; height: 2px; background: var(--flag-blue); transform: scaleX(0); transform-origin: left; transition: transform 0.3s ease; }
+        .nav-links a:hover::after, .nav-links a.active::after { transform: scaleX(1); }
+
+        /* ── PAGE INTRO ── */
+        .page-intro {
+            position: relative; overflow: hidden;
+            background-image:
+                linear-gradient(rgba(11,17,32,0.035) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(11,17,32,0.035) 1px, transparent 1px);
+            background-size: 46px 46px;
+        }
+        .page-intro .page-width { padding-block: clamp(52px, 7vw, 88px); }
+        .page-intro .section-eyebrow { margin-bottom: 1.4rem; }
+        .page-intro h1 {
+            font-family: 'Big Shoulders Display', sans-serif;
+            font-size: clamp(2.8rem, 5.5vw, 4.75rem);
+            font-weight: 900; line-height: 0.94; color: var(--midnight);
+            letter-spacing: -0.01em; margin-bottom: 1.2rem;
+        }
+        .page-intro h1 span { color: var(--flag-blue); }
+        .page-intro p { font-size: clamp(1.05rem, 1.4vw, 1.28rem); font-weight: 300; max-width: 640px; color: var(--slate); }
+        .follow { margin-top: 1.8rem; display: flex; align-items: center; gap: 14px; flex-wrap: wrap; font-size: 0.9rem; color: var(--muted); }
+        .follow a { color: var(--midnight); font-weight: 600; text-decoration: none; border-bottom: 2px solid var(--flag-blue); padding-bottom: 2px; }
+        .follow a:hover { color: var(--chicago-red); }
+
+        /* ── TAG PILLS + THUMBS (bright, by category) ── */
+        .tag {
+            font-family: 'Inter', sans-serif; font-size: 0.7rem; font-weight: 700;
+            letter-spacing: 0.08em; text-transform: uppercase; color: #fff;
+            padding: 5px 12px; border-radius: 100px;
+        }
+        .tag.program { background: #2FA6DE; }
+        .tag.community { background: var(--chicago-red); }
+        .tag.research { background: var(--research); }
+
+        .thumb { position: relative; overflow: hidden; }
+        .thumb.program { background: linear-gradient(135deg, #7BD6F5 0%, #2FA6DE 100%); }
+        .thumb.community { background: linear-gradient(135deg, #FF8A93 0%, #E23D4B 100%); }
+        .thumb.research { background: linear-gradient(135deg, #A7A7F3 0%, #5A5AD6 100%); }
+        .thumb::before {
+            content: ''; position: absolute; inset: 0;
+            background-image: radial-gradient(rgba(255,255,255,0.22) 1.5px, transparent 1.6px);
+            background-size: 20px 20px;
+        }
+        .thumb::after {
+            content: ''; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
+            width: 44px; height: 44px; background: rgba(255,255,255,0.85);
+            clip-path: polygon(50% 0%, 63% 35%, 100% 35%, 68% 57%, 81% 100%, 50% 75%, 19% 100%, 32% 57%, 0% 35%, 37% 35%);
+        }
+
+        .meta { display: flex; align-items: center; gap: 12px; margin-bottom: 14px; flex-wrap: wrap; }
+        .meta .date, .meta .rt { font-size: 0.82rem; color: var(--muted); }
+        .meta .dot { width: 3px; height: 3px; border-radius: 50%; background: var(--cloud); }
+        .readmore {
+            font-family: 'Inter', sans-serif; font-size: 0.8rem; font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase;
+            color: var(--midnight); text-decoration: none; border-bottom: 3px solid var(--chicago-red); padding-bottom: 4px;
+            align-self: flex-start; display: inline-flex; align-items: center; gap: 8px; transition: gap 0.2s ease;
+        }
+        .readmore:hover { gap: 13px; }
+
+        /* ── NEWS LAYOUT ── */
+        .news { padding-block: clamp(48px, 6vw, 76px); }
+
+        /* Featured */
+        .featured {
+            display: grid; grid-template-columns: 1.05fr 0.95fr;
+            border: 2px solid var(--midnight); box-shadow: 8px 8px 0 var(--flag-blue);
+            background: #fff; margin-bottom: clamp(40px, 5vw, 60px);
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+        .featured:hover { transform: translate(-3px, -3px); box-shadow: 11px 11px 0 var(--flag-blue); }
+        .featured .thumb { min-height: 320px; border-right: 2px solid var(--midnight); }
+        .featured .thumb::after { width: 88px; height: 88px; }
+        .featured .body { padding: clamp(30px, 4vw, 52px); display: flex; flex-direction: column; }
+        .featured h2 {
+            font-family: 'Big Shoulders Display', sans-serif;
+            font-size: clamp(1.9rem, 3.2vw, 2.9rem); font-weight: 900;
+            color: var(--midnight); line-height: 1; letter-spacing: -0.01em; margin-bottom: 16px;
+        }
+        .featured p { font-size: 1.05rem; color: var(--slate); margin-bottom: 26px; flex-grow: 1; }
+        .byline { display: flex; align-items: center; gap: 10px; margin-bottom: 22px; }
+        .byline .av { width: 32px; height: 32px; border-radius: 50%; background: var(--flag-blue); color: #fff; display: flex; align-items: center; justify-content: center; font-family: 'Big Shoulders Display', sans-serif; font-weight: 700; font-size: 0.95rem; }
+        .byline .who { font-size: 0.86rem; color: var(--muted); }
+        .byline .who strong { color: var(--midnight); font-weight: 600; }
+
+        /* Grid */
+        .post-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 28px; }
+        .post {
+            display: flex; flex-direction: column; background: #fff;
+            border: 2px solid var(--midnight); box-shadow: 6px 6px 0 var(--midnight);
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+        .post:hover { transform: translate(-3px, -3px); box-shadow: 9px 9px 0 var(--flag-blue); }
+        .post .thumb { aspect-ratio: 16 / 9; border-bottom: 2px solid var(--midnight); }
+        .post .body { padding: 22px 24px 26px; display: flex; flex-direction: column; flex-grow: 1; }
+        .post h3 {
+            font-family: 'Big Shoulders Display', sans-serif;
+            font-size: 1.5rem; font-weight: 700; color: var(--midnight);
+            line-height: 1.05; margin-bottom: 12px;
+        }
+        .post p { font-size: 0.95rem; color: var(--muted); margin-bottom: 22px; flex-grow: 1; }
+
+        /* ── FOOTER ── */
+        footer { background: var(--midnight); border-top: 1px solid rgba(255,255,255,0.08); }
+        footer .page-width {
+            display: flex; justify-content: space-between; align-items: flex-end;
+            flex-wrap: wrap; gap: 20px; padding-block: 40px;
+        }
+        footer .foot-label { font-family: 'Inter', sans-serif; text-transform: uppercase; letter-spacing: 0.1em; color: #64748B; font-size: 0.78rem; font-weight: 600; margin-bottom: 8px; }
+        footer .foot-contact a { font-family: 'Inter', sans-serif; font-weight: 700; font-size: 1.3rem; color: var(--ice); text-decoration: none; letter-spacing: 0.01em; }
+        footer .foot-contact a:hover { color: var(--flag-blue); }
+        footer .made { color: #475569; font-size: 0.85rem; line-height: 1.6; text-align: right; }
+
+        .menu-toggle { display: none; width: 44px; height: 44px; padding: 10px; border: 0; background: transparent; color: var(--midnight); cursor: pointer; }
+        .menu-toggle span { display: block; width: 22px; height: 2px; margin: 3px auto; background: currentColor; transition: transform 0.2s ease, opacity 0.2s ease; }
+
+        /* ── RESPONSIVE ── */
+        @media (max-width: 820px) {
+            .featured { grid-template-columns: 1fr; }
+            .featured .thumb { min-height: 200px; border-right: none; border-bottom: 2px solid var(--midnight); }
+        }
+        @media (max-width: 768px) {
+            .page-width { padding-inline: var(--side-pad-mobile); }
+            .nav-links { display: none; }
+            .menu-toggle { display: inline-flex; flex-direction: column; justify-content: center; }
+            header .page-width { position: relative; }
+            header nav { position: absolute; top: 100%; left: 0; right: 0; display: none; background: rgba(247, 250, 252, 0.98); border-bottom: 1px solid var(--cloud); }
+            header nav.is-open { display: block; }
+            header nav.is-open .nav-links { display: flex; flex-direction: column; align-items: stretch; gap: 0; padding: 8px var(--side-pad-mobile) 14px; }
+            header nav.is-open .nav-links a { display: block; padding: 12px 0; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="topbar"></div>
+
+    <!-- ═══════════ HEADER ═══════════ -->
+    <header>
+        <div class="page-width">
+            <a href="index.html" class="logo">
+                <img src="images/logo.png" alt="Chicago LEAD">
+                Chicago LEAD
+            </a>
+            <nav id="site-nav">
+                <ul class="nav-links">
+                    <li><a href="about.html">About</a></li>
+                    <li><a href="get-involved.html">Get Involved</a></li>
+                    <li><a href="news.html" class="active">News</a></li>
+                    <li><a href="contact.html">Contact</a></li>
+                </ul>
+            </nav>
+            <button class="menu-toggle" type="button" aria-expanded="false" aria-controls="site-nav" aria-label="Open navigation" title="Open navigation"><span></span><span></span><span></span></button>
+        </div>
+    </header>
+
+    <!-- ═══════════ PAGE INTRO ═══════════ -->
+    <section class="page-intro">
+        <div class="page-width">
+            <span class="section-eyebrow"><span class="live-dot"></span> News &amp; notes</span>
+            <h1>What's happening <span>at LEAD.</span></h1>
+            <p>Projects shipped, papers published, alumni spotted around the city—the program, in real time.</p>
+            <div class="follow">
+                Follow along:
+                <a href="#">LinkedIn</a>
+                <a href="#">Newsletter</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- ═══════════ NEWS ═══════════ -->
+    <!-- Placeholder posts — dates/copy are drafts; each links to its native article page -->
+    <section class="news">
+        <div class="page-width">
+
+            <!-- Featured -->
+            <a href="posts/news-spring-2026.html" class="featured" style="text-decoration:none;">
+                <div class="thumb program"></div>
+                <div class="body">
+                    <div class="meta"><span class="tag program">Program</span><span class="date">June 12, 2026</span><span class="dot"></span><span class="rt">4 min read</span></div>
+                    <h2>Spring 2026 wraps with a record six projects.</h2>
+                    <div class="byline"><span class="av">L</span><span class="who">By the <strong>LEAD team</strong></span></div>
+                    <p>Our biggest cohort yet just crossed the finish line—six company projects delivered by students from four partner schools, capping ten weeks of real applied-AI work for Chicago sponsors.</p>
+                    <span class="readmore">Read the recap <span>&rarr;</span></span>
+                </div>
+            </a>
+
+            <!-- Grid -->
+            <div class="post-grid">
+                <a href="posts/news-pilsen-alumni.html" class="post" style="text-decoration:none;">
+                    <div class="thumb community"></div>
+                    <div class="body">
+                        <div class="meta"><span class="tag community">Community</span><span class="date">May 30, 2026</span><span class="dot"></span><span class="rt">2 min</span></div>
+                        <h3>Running into LEAD alumni in Pilsen.</h3>
+                        <p>We caught up with program alumni at the RitchieBot Chicago premiere—proof the network keeps growing well beyond the ten weeks.</p>
+                        <span class="readmore">Read more <span>&rarr;</span></span>
+                    </div>
+                </a>
+
+                <a href="posts/news-acm-respect-2026.html" class="post" style="text-decoration:none;">
+                    <div class="thumb research"></div>
+                    <div class="body">
+                        <div class="meta"><span class="tag research">Research</span><span class="date">May 15, 2026</span><span class="dot"></span><span class="rt">3 min</span></div>
+                        <h3>LEAD research at ACM RESPECT 2026.</h3>
+                        <p>Our work was accepted to the 2026 ACM RESPECT conference, sharing what we've learned about experiential, equity-minded AI education.</p>
+                        <span class="readmore">Read more <span>&rarr;</span></span>
+                    </div>
+                </a>
+
+                <a href="posts/news-forge-launch.html" class="post" style="text-decoration:none;">
+                    <div class="thumb community"></div>
+                    <div class="body">
+                        <div class="meta"><span class="tag community">Community</span><span class="date">April 2, 2026</span><span class="dot"></span><span class="rt">2 min</span></div>
+                        <h3>Northwestern launches the Forge.</h3>
+                        <p>A new center for experiential learning opens at Northwestern—expanding the home base for hands-on programs like LEAD.</p>
+                        <span class="readmore">Read more <span>&rarr;</span></span>
+                    </div>
+                </a>
+
+                <a href="posts/news-record-applicants.html" class="post" style="text-decoration:none;">
+                    <div class="thumb program"></div>
+                    <div class="body">
+                        <div class="meta"><span class="tag program">Program</span><span class="date">January 15, 2026</span><span class="dot"></span><span class="rt">2 min</span></div>
+                        <h3>A record applicant pool opens 2026.</h3>
+                        <p>The year kicked off with our most competitive student applicant pool to date—more schools, more interest, more talent.</p>
+                        <span class="readmore">Read more <span>&rarr;</span></span>
+                    </div>
+                </a>
+            </div>
+
+        </div>
+    </section>
+
+    <!-- ═══════════ FOOTER ═══════════ -->
+    <footer id="contact">
+        <div class="page-width">
+            <div class="foot-contact">
+                <div class="foot-label">Get in touch</div>
+                <a href="mailto:harper.pack@northwestern.edu">harper.pack@northwestern.edu</a>
+            </div>
+            <div class="made">© 2026 Chicago LEAD</div>
+        </div>
+    </footer>
+
+    <script>
+        const menuToggle = document.querySelector('.menu-toggle');
+        const siteNav = document.querySelector('#site-nav');
+        menuToggle.addEventListener('click', () => {
+            const isOpen = siteNav.classList.toggle('is-open');
+            menuToggle.setAttribute('aria-expanded', String(isOpen));
+            menuToggle.setAttribute('aria-label', isOpen ? 'Close navigation' : 'Open navigation');
+            menuToggle.setAttribute('title', isOpen ? 'Close navigation' : 'Open navigation');
+        });
+        siteNav.querySelectorAll('a').forEach(link => link.addEventListener('click', () => {
+            siteNav.classList.remove('is-open');
+            menuToggle.setAttribute('aria-expanded', 'false');
+            menuToggle.setAttribute('aria-label', 'Open navigation');
+            menuToggle.setAttribute('title', 'Open navigation');
+        }));
+    </script>
+</body>
+</html>
